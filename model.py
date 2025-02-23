@@ -23,7 +23,6 @@ def buildBaselineModel():
 
     return model
 
-
 def buildBetterModel():
     model = tf.keras.Sequential()
 
