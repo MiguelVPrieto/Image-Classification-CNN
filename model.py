@@ -21,6 +21,52 @@ def dataAugmentation(images):
 def buildBaselineModel():
     model = tf.keras.Sequential()
 
+    model.add(tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)))
+    model.add(tf.keras.layers.Dropout(0.2))
+
+    model.add(tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.2))
+
+    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.3))
+
+    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.3))
+
+    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.3))
+
+    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.4))
+
+    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.4))
+
+    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.4))
+
+    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.5))
+
+    model.add(tf.keras.layers.Flatten())
+    model.add(tf.keras.layers.Dense(512, activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.3))
+    model.add(tf.keras.layers.Dense(256, activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.3))
+    model.add(tf.keras.layers.Dense(128, activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.4))
+    model.add(tf.keras.layers.Dense(64, activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.5))
+
+    model.add(tf.keras.layers.Dense(100, activation='softmax'))
+
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    model.summary()
+
     return model
 
 def buildBetterModel():
