@@ -178,7 +178,7 @@ def buildBetterModel():
 
     return model
 
-def trainModel(model, images, labels, batch_size, epochs):
+def trainModel(model, images, labels, batch_size=64, epochs=1, name=""):
     images, imagesVal, labels, labelsVal = train_test_split(images, labels, test_size=0.2, random_state=0, stratify=labels)
 
     datagen = dataAugmentation(images)
@@ -190,4 +190,8 @@ def trainModel(model, images, labels, batch_size, epochs):
         validation_data=(imagesVal, labelsVal),
         verbose=1
     )
+
+    print("Saving model...")
+    model.save(f'model{name}.keras')
+
     return history

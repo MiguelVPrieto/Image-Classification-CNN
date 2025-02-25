@@ -1,8 +1,12 @@
+import numpy as np
+import pandas as pd
 from database import importData
 from model import buildBaselineModel
 from model import buildBetterModel
 from model import trainModel
+from model import preprocessImages
 
+print("Loading data...")
 (x_train, y_train), (x_test, y_test) = importData()
 
 labels = [
@@ -28,18 +32,37 @@ labels = [
     "whale", "willow_tree", "wolf", "woman", "worm"
 ]
 
+print("Preprocessing images...")
+x_train2 = preprocessImages(x_train)
 
-#print("Training data shape:", x_train.shape)
-#print("Test data shape:", x_test.shape)
+print("Building models...")
+baselineModel = buildBaselineModel()
+improvedModel = buildBetterModel()
 
-#print(y_train[0])
+print("Training models...")
+historyBaseline = trainModel(model=baselineModel, images=x_train, labels=y_train, batch_size=64, epochs=5, name='Baseline')
+historyImproved = trainModel(model=improvedModel, images=x_train2, labels=y_train, batch_size=64, epochs=5, name='Improved')
+print("Training complete!")
 
-#fig = plt.figure(figsize=(12, 8))
-#columns = 5
-#rows = 3
-#for i in range(1, columns*rows +1):
-#  img = x_train[i]
-#  fig.add_subplot(rows, columns, i)
-#  plt.title(labels[y_train[i][0]])
-#  plt.imshow(img, cmap='binary')
-#plt.show()
+print("Loading results...")
+accuracyBaseline = historyBaseline.history['val_accuracy'][-1]
+accuracyBaseline = accuracyBaseline * 100
+accuracyBaseline = np.round(accuracyBaseline, 2)
+accuracyImproved = historyImproved.history['val_accuracy'][-1]
+accuracyImproved = accuracyImproved * 100
+accuracyImproved = np.round(accuracyImproved, 2)
+
+print("Saving results...")
+try:
+    file = pd.read_csv("results.csv")
+    lastTrain = file.iloc[-1, 0]
+    lastTrain += 1
+except (FileNotFoundError, IndexError):
+    print("No previous results found. Creating a new file.")
+    lastTrain = 1
+    file = pd.DataFrame(columns=["Train ID", "Baseline Model Accuracy (%)", "Improved Model Accuracy (%)"])
+
+newData = pd.Dataframe([[lastTrain, accuracyBaseline, accuracyImproved]], columns=["Train ID", "Baseline Model Accuracy (%)", "Improved Model Accuracy (%)"])
+file = pd.concat([file, newData], ignore_index=True)
+file.to_csv("results.csv", index=False)
+print("All processes finished!")
