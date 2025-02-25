@@ -1,9 +1,7 @@
-import tensorflow as tf
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from database import importData
+from model import buildBaselineModel
+from model import buildBetterModel
+from model import trainModel
 
 (x_train, y_train), (x_test, y_test) = importData()
 
