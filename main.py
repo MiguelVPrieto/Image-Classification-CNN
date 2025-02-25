@@ -31,17 +31,17 @@ labels = [
 ]
 
 
-print("Training data shape:", x_train.shape)
-print("Test data shape:", x_test.shape)
+#print("Training data shape:", x_train.shape)
+#print("Test data shape:", x_test.shape)
 
-print(y_train[0])
+#print(y_train[0])
 
-fig = plt.figure(figsize=(12, 8))
-columns = 5
-rows = 3
-for i in range(1, columns*rows +1):
-  img = x_train[i]
-  fig.add_subplot(rows, columns, i)
-  plt.title(labels[y_train[i][0]])
-  plt.imshow(img, cmap='binary')
-plt.show()
+#fig = plt.figure(figsize=(12, 8))
+#columns = 5
+#rows = 3
+#for i in range(1, columns*rows +1):
+#  img = x_train[i]
+#  fig.add_subplot(rows, columns, i)
+#  plt.title(labels[y_train[i][0]])
+#  plt.imshow(img, cmap='binary')
+#plt.show()
