@@ -5,10 +5,16 @@ import seaborn as sns
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def preprocessImages(images):
-    images = tf.image.resize(images,(1024,1024))
+def preprocessImages(images, batch_size=64):
+    def process(image):
+        image = tf.image.resize(image, (1024, 1024))
+        image = tf.cast(image, tf.float16)
+        return image
 
-    return images
+    dataset = tf.data.Dataset.from_tensor_slices(images)
+    dataset = dataset.map(process, num_parallel_calls=tf.data.AUTOTUNE)
+    dataset = dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
+    return dataset
 
 def dataAugmentation(images):
     datagen = tf.keras.preprocessing.image.ImageDataGenerator(

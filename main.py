@@ -62,7 +62,7 @@ except (FileNotFoundError, IndexError):
     lastTrain = 1
     file = pd.DataFrame(columns=["Train ID", "Baseline Model Accuracy (%)", "Improved Model Accuracy (%)"])
 
-newData = pd.Dataframe([[lastTrain, accuracyBaseline, accuracyImproved]], columns=["Train ID", "Baseline Model Accuracy (%)", "Improved Model Accuracy (%)"])
+newData = pd.DataFrame([[lastTrain, accuracyBaseline, accuracyImproved]], columns=["Train ID", "Baseline Model Accuracy (%)", "Improved Model Accuracy (%)"])
 file = pd.concat([file, newData], ignore_index=True)
 file.to_csv("results.csv", index=False)
 print("All processes finished!")
