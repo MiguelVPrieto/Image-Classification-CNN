@@ -4,7 +4,6 @@ from database import importData
 from model import buildBaselineModel
 from model import buildBetterModel
 from model import trainModel
-from model import preprocessImages
 
 print("Loading data...")
 (x_train, y_train), (x_test, y_test) = importData()
@@ -32,8 +31,8 @@ labels = [
     "whale", "willow_tree", "wolf", "woman", "worm"
 ]
 
-print("Preprocessing images...")
-x_train2 = preprocessImages(x_train)
+#print("Preprocessing images...")
+#x_train2 = preprocessImages(x_train)
 
 print("Building models...")
 baselineModel = buildBaselineModel()
@@ -41,7 +40,7 @@ improvedModel = buildBetterModel()
 
 print("Training models...")
 historyBaseline = trainModel(model=baselineModel, images=x_train, labels=y_train, batch_size=64, epochs=5, name='Baseline')
-historyImproved = trainModel(model=improvedModel, images=x_train2, labels=y_train, batch_size=64, epochs=5, name='Improved')
+historyImproved = trainModel(model=improvedModel, images=x_train, labels=y_train, batch_size=64, epochs=5, name='Improved')
 print("Training complete!")
 
 print("Loading results...")
