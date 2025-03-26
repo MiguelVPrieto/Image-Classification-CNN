@@ -6,7 +6,7 @@ from model import buildBetterModel
 from model import trainModel
 
 print("Loading data...")
-(x_train, y_train), (x_test, y_test) = importData()
+train_ds, test_ds = importData(batch_size=64)
 
 labels = [
     "apple", "aquarium_fish", "baby", "bear", "beaver",
@@ -39,8 +39,8 @@ baselineModel = buildBaselineModel()
 improvedModel = buildBetterModel()
 
 print("Training models...")
-historyBaseline = trainModel(model=baselineModel, images=x_train, labels=y_train, batch_size=64, epochs=5, name='Baseline')
-historyImproved = trainModel(model=improvedModel, images=x_train, labels=y_train, batch_size=64, epochs=5, name='Improved')
+historyBaseline = trainModel(model=baselineModel, train_ds=train_ds, val_ds=test_ds, epochs=5, name='Baseline')
+historyImproved = trainModel(model=improvedModel, train_ds=train_ds, val_ds=test_ds, epochs=5, name='Improved')
 print("Training complete!")
 
 print("Loading results...")

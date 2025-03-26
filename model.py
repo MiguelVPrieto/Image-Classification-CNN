@@ -147,19 +147,11 @@ def buildBetterModel():
 
     return model
 
-def trainModel(model, images, labels, batch_size=64, epochs=1, name=""):
-    images, imagesVal, labels, labelsVal = train_test_split(images, labels, test_size=0.2, random_state=0, stratify=labels)
-
-    images = tf.keras.applications.vgg16.preprocess_input(images)
-    imagesVal = tf.keras.applications.vgg16.preprocess_input(imagesVal)
-
-    datagen = dataAugmentation(images)
-
+def trainModel(model, train_ds, val_ds, epochs=1, name=""):
     history = model.fit(
-        datagen.flow(images, labels, batch_size=batch_size),
-        batch_size=batch_size,
+        train_ds,
         epochs=epochs,
-        validation_data=(imagesVal, labelsVal),
+        validation_data=val_ds,
         verbose=1
     )
 
