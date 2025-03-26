@@ -24,50 +24,19 @@ def dataAugmentation(images):
     return datagen
 
 def buildBaselineModel():
-    model = tf.keras.Sequential()
+    convolutionModel = tf.keras.applications.VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
-    model.add(tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)))
-    model.add(tf.keras.layers.Dropout(0.2))
+    for layer in convolutionModel.layers:
+        layer.trainable = False
 
-    model.add(tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.2))
+    x = tf.keras.layers.Flatten()(convolutionModel.output)
+    x = tf.keras.layers.Dense(1024, activation='relu')(x)
+    x = tf.keras.layers.Dense(512, activation='relu')(x)
+    x = tf.keras.layers.Dense(256, activation='relu')(x)
+    x = tf.keras.layers.Dense(128, activation='relu')(x)
+    x = tf.keras.layers.Dense(100, activation='softmax')(x)
 
-    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.3))
-
-    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.3))
-
-    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.3))
-
-    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.4))
-
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.4))
-
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.4))
-
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.5))
-
-    model.add(tf.keras.layers.Flatten())
-    model.add(tf.keras.layers.Dense(512, activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.3))
-    model.add(tf.keras.layers.Dense(256, activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.3))
-    model.add(tf.keras.layers.Dense(128, activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.4))
-    model.add(tf.keras.layers.Dense(64, activation='relu'))
-    model.add(tf.keras.layers.Dropout(0.5))
-
-    model.add(tf.keras.layers.Dense(100, activation='softmax'))
+    model = tf.keras.models.Model(inputs=convolutionModel.input, outputs=x)
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     model.summary()
@@ -77,7 +46,7 @@ def buildBaselineModel():
 def buildBetterModel():
     model = tf.keras.Sequential()
 
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu', input_shape=(32, 32, 3)))
+    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu', input_shape=(224, 224, 3)))
     model.add(tf.keras.layers.Dropout(0.2))
 
     model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
@@ -180,6 +149,9 @@ def buildBetterModel():
 
 def trainModel(model, images, labels, batch_size=64, epochs=1, name=""):
     images, imagesVal, labels, labelsVal = train_test_split(images, labels, test_size=0.2, random_state=0, stratify=labels)
+
+    images = tf.keras.applications.vgg16.preprocess_input(images)
+    imagesVal = tf.keras.applications.vgg16.preprocess_input(imagesVal)
 
     datagen = dataAugmentation(images)
 
