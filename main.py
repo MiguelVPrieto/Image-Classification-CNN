@@ -4,6 +4,8 @@ from database import importData
 from model import buildBaselineModel
 from model import buildBetterModel
 from model import trainModel
+from keras import backend as K
+import gc
 
 print("Loading data...")
 train_ds, test_ds = importData(batch_size=64)
@@ -40,7 +42,14 @@ improvedModel = buildBetterModel()
 
 print("Training models...")
 historyBaseline = trainModel(model=baselineModel, train_ds=train_ds, val_ds=test_ds, epochs=5, name='Baseline')
+del baselineModel
+K.clear_session()
+gc.collect()
+
 historyImproved = trainModel(model=improvedModel, train_ds=train_ds, val_ds=test_ds, epochs=5, name='Improved')
+del improvedModel
+K.clear_session()
+gc.collect()
 print("Training complete!")
 
 print("Loading results...")
