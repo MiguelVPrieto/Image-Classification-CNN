@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 def preprocess(image, label):
-    image = tf.image.resize(tf.cast(image, tf.float32), (224, 224))
+    image = tf.image.resize(tf.cast(image, tf.float32), (64, 64))
     image = tf.keras.applications.vgg16.preprocess_input(image)
     return image, label
 

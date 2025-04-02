@@ -24,7 +24,7 @@ def dataAugmentation(images):
     return datagen
 
 def buildBaselineModel():
-    convolutionModel = tf.keras.applications.VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+    convolutionModel = tf.keras.applications.VGG16(weights='imagenet', include_top=False, input_shape=(64, 64, 3))
 
     for layer in convolutionModel.layers:
         layer.trainable = False
@@ -46,7 +46,7 @@ def buildBaselineModel():
 def buildBetterModel():
     model = tf.keras.Sequential()
 
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu', input_shape=(224, 224, 3)))
+    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu', input_shape=(64, 64, 3)))
     model.add(tf.keras.layers.Dropout(0.2))
 
     model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
