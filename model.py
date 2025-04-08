@@ -96,8 +96,8 @@ def buildBetterModel():
     model.add(tf.keras.layers.Conv2D(1024, (2, 2), padding='same', activation='relu'))
     model.add(tf.keras.layers.Dropout(0.4))
 
-    model.add(tf.keras.layers.Flatten())
-    # model.add(tf.keras.layers.GlobalAveragePooling2D())
+    #model.add(tf.keras.layers.Flatten())
+    model.add(tf.keras.layers.GlobalAveragePooling2D())
 
     model.add(tf.keras.layers.Dense(4096, activation='relu'))
     model.add(tf.keras.layers.Dropout(0.3))
